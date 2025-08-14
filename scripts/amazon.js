@@ -1,10 +1,11 @@
-import { cart, addToCart } from '../data/cart.js';
+import { addToCart, calculateCartQuantity } from '../data/cart.js';
 import { products } from '../data/products.js';
-import {formatCurrencyCents} from './utils/money.js';
+import { formatCurrencyCents } from './utils/money.js';
 
 
 
 const hideTimers = {};
+updateCartQuantity();
 showProducts();
 
 
@@ -23,14 +24,7 @@ document.querySelectorAll('.js-add-to-cart-button')
     )
 
 function updateCartQuantity() {
-    let cartQuantity = 0;
-
-    cart.forEach((cartItem) => {
-        cartQuantity += cartItem.quantity;
-    })
-
-    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-
+    document.querySelector('.js-cart-quantity').innerHTML = calculateCartQuantity();
 }
 
 
