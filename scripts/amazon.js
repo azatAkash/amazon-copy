@@ -34,8 +34,6 @@ function updateCartQuantity() {
 }
 
 
-
-
 function flashAddToCartBadge(productId) {
     document.querySelector(`.js-added-to-cart-${productId}`).classList.add('visible');
 
