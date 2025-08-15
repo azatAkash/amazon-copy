@@ -16,6 +16,3 @@ export const deliveryOptions = [
     }
 ];
 
-export function s(){
-    
-}
