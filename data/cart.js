@@ -6,7 +6,7 @@ function saveToStorage() {
 
 export function addToCart(productId) {
     const selectedQuantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value);
-    let matchingItem = findCartItemByProductId(productId);
+    let matchingItem = findByProductId(productId);
 
     if (matchingItem) {
         matchingItem.quantity += selectedQuantity;
@@ -23,7 +23,7 @@ export function addToCart(productId) {
 
 function findByProductId(productId) {
     let matchingItem;
-    
+
     cart.forEach((cartItem) => {
         if (cartItem.productId === productId) {
             matchingItem = cartItem;
