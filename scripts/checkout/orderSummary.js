@@ -1,12 +1,12 @@
-import { cart, removeFromCart, calculateCartQuantity, updateCartItemQuantity, updateDeliveryOption } from '../../data/cart.js';
+import { cart, removeFromCart, updateCartItemQuantity, updateDeliveryOption } from '../../data/cart.js';
 import { getProductById } from '../../data/products.js';
 import { formatCurrencyCents } from '../utils/money.js';
-import { deliveryOptions, getDeliveryOptionById } from '../../data/deliveryOptions.js';
-import { getFormattedDate } from '../utils/date.js';
+import { deliveryOptions, getDeliveryOptionById, calculateDeliveryDate } from '../../data/deliveryOptions.js';
 import { renderPaymentSummary } from './paymentSummary.js';
+import { renderCheckoutHeader } from './checkoutHeader.js';
+
 
 export function renderOrderSummary() {
-    updateCartQuantity();
     let cartHtml = '';
 
     cart.forEach((cartItem) => {
@@ -17,7 +17,7 @@ export function renderOrderSummary() {
         cartHtml +=
             `<div class="cart-item-container js-cart-item-container-${product.id}">
             <div class="delivery-date js-delivery-date-${deliveryOption.id}">
-              Delivery date: ${getFormattedDate(deliveryOption.deliveryDays)}
+              Delivery date: ${calculateDeliveryDate(deliveryOption)}
             </div>
 
             <div class="cart-item-details-grid">
@@ -67,8 +67,9 @@ export function renderOrderSummary() {
 
                 removeFromCart(productId);
 
-                document.querySelector(`.js-cart-item-container-${productId}`).remove();
-                updateCartQuantity();
+                renderOrderSummary();
+
+                renderCheckoutHeader();
                 renderPaymentSummary();
             });
         });
@@ -95,7 +96,7 @@ export function renderOrderSummary() {
                 if (newQuantity > 0 && newQuantity < 1000) {
                     updateCartItemQuantity(productId, newQuantity);
                     document.querySelector(`.js-quantity-label-${productId}`).innerHTML = newQuantity;
-                    updateCartQuantity();
+                    renderCheckoutHeader();
                     renderPaymentSummary();
                 }
 
@@ -110,7 +111,7 @@ export function renderOrderSummary() {
                     if (newQuantity > 0 && newQuantity < 1000) {
                         updateCartItemQuantity(productId, newQuantity);
                         document.querySelector(`.js-quantity-label-${productId}`).innerHTML = newQuantity;
-                        updateCartQuantity();
+                        renderCheckoutHeader();
                         renderPaymentSummary();
                     }
                     document.querySelector(`.js-quantity-input-${productId}`).value = '';
@@ -127,10 +128,6 @@ export function renderOrderSummary() {
                 renderPaymentSummary();
             })
         });
-}
-
-function updateCartQuantity() {
-    document.querySelector('.js-items-counter-link').innerHTML = `${calculateCartQuantity()} items`;
 }
 
 
@@ -150,7 +147,7 @@ function deliveryOptionsHtml(productId, cartItem) {
                     >
                 <div>
                     <div class="delivery-option-date">
-                        ${getFormattedDate(deliveryOption.deliveryDays)}
+                        ${calculateDeliveryDate(deliveryOption)}
                     </div>
                     <div class="delivery-option-price">
                         ${priceString} Shipping
