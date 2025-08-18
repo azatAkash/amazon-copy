@@ -1,11 +1,22 @@
-export let cart = JSON.parse(localStorage.getItem('cart')) || [];
+export let cart = JSON.parse(localStorage.getItem('cart'));
+
+if (!cart) {
+    cart = [
+        {
+            productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
+            quantity: 1,
+            deliveryOptionId: '1'
+        }
+    ];
+}
 
 function saveToStorage() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
 export function addToCart(productId) {
-    const selectedQuantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value);
+    const selectedQuantity = Number(document.querySelector(`.js-quantity-selector-${productId}`)?.value ?? 1);
+
     let matchingItem = findByProductId(productId);
 
     if (matchingItem) {
@@ -45,7 +56,7 @@ export function removeFromCart(productId) {
 }
 
 
-export function updateDeliveryOption(productId, deliveryOptionId){
+export function updateDeliveryOption(productId, deliveryOptionId) {
     let matchingItem = findByProductId(productId);
 
     matchingItem.deliveryOptionId = deliveryOptionId;
